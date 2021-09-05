@@ -42,7 +42,7 @@ class CompetitionAdmin(admin.ModelAdmin):
 
         for i in choices:
             for j in range(num_choice[0],num_choice[1]):
-                ticket=i+j
+                ticket=i+str(j)
                 CompetitionTicket.objects.create(obj,ticket)
 
 
