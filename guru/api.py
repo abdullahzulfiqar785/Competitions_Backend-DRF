@@ -1,5 +1,7 @@
 from django.urls import path, include
 
 urlpatterns = [
-    path('competitions/', include('competitions.api') )
+    path('api-auth/', include('rest_framework.urls')),
+
+    path('competitions/', include('competitions.api'))
 ]

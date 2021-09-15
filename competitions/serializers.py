@@ -23,6 +23,9 @@ class CompetitionImageSerializers(serializers.ModelSerializer):
 
 
 class CompetitionSerializers(serializers.ModelSerializer):
+    tickets = CompetitionTicketSerializers(read_only=True, many=True)
+    images = CompetitionImageSerializers(read_only=True, many=True)
+
     class Meta:
         model = Competition
         fields = [
@@ -39,4 +42,6 @@ class CompetitionSerializers(serializers.ModelSerializer):
             'discount_text',
             'discount_active',
             'product_price',
+            'tickets',
+            'images',
         ]
