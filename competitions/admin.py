@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import CompetitionImage, Competition, CompetitionTicket
+from .utils import char_Count
 
 
 class CompetitionImageAdmin(admin.TabularInline):
@@ -33,18 +34,29 @@ class CompetitionAdmin(admin.ModelAdmin):
         'move_section',
     )
 
-    # def save_model(self, request: Any, obj: _ModelT, form: Any, change: Any) -> None:
-    #     return super().save_model(request, obj, form, change)\
-    
     def save_model(self, request, obj, form, change):
-        choices=[chr(i) for i in range(ord(obj.letter_choices[0].upper()),ord(obj.letter_choices[2].upper())+1)]
-        num_choice=lst_int = [int(x) for x in obj.numbers_from.split("-")]
+        if change:
+            return super().save_model(request, obj, form, change)
+        obj.save()
+        choices = char_Count(obj.letter_choices)
+        starting_range, ending_range = obj.numbers_from.split("-")
+        for choice in choices:
+            for j in range(int(starting_range), int(ending_range)+1):
+                ticket = choice+str(j)
+                CompetitionTicket.objects.create(
+                    competition=obj, ticket=ticket)
 
-        for i in choices:
-            for j in range(num_choice[0],num_choice[1]):
-                ticket=i+str(j)
-                CompetitionTicket.objects.create(obj,ticket)
+
+class CompetitionTicketAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return False
+    list_display = [
+        'id',
+        'competition',
+        'customer',
+        'ticket',
+        'status'
+    ]
 
 
-
-        pass
+admin.site.register(CompetitionTicket, CompetitionTicketAdmin)

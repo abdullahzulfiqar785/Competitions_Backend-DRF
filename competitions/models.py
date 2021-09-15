@@ -76,7 +76,6 @@ class CompetitionTicket(models.Model):
         id = str(self.ticket)
         return self.ticket
 
-
 class CompetitionImage(models.Model):
     competition = models.ForeignKey(
         Competition, on_delete=models.CASCADE, related_name='images')
